@@ -1,0 +1,1508 @@
+# CLEANBRIDGE GH — FRONTEND BUILD SPECIFICATION
+
+Build a fully functional, production-quality frontend for a Ghana-focused household waste collection and logistics platform called:
+
+# CleanBridge GH
+
+### Tagline
+
+**Cleaner Homes. Smarter Routes. A Cleaner Ghana.**
+
+---
+
+# 🚨 CRITICAL TECHNOLOGY REQUIREMENTS
+
+This is a FRONTEND-ONLY project.
+
+I already have my backend/API.
+
+DO NOT create a new backend.
+
+DO NOT replace my backend.
+
+DO NOT create Express, Node.js API routes, MongoDB models, Prisma, Mongoose, or any backend server.
+
+Your job is to build the frontend and connect it to my existing backend API.
+
+## Frontend stack — MUST USE
+
+* React
+* Vite
+* JavaScript ONLY
+* HTML
+* CSS
+* Tailwind CSS
+* React Router
+* Axios or Fetch API
+* React Hook Form
+* Zod if useful for frontend validation
+* Lucide React for icons
+
+# ABSOLUTELY NO TYPESCRIPT
+
+This requirement is mandatory.
+
+Do NOT use:
+
+* `.ts`
+* `.tsx`
+* `interface`
+* `type`
+* TypeScript generics
+* `tsconfig.json`
+* TypeScript compiler
+* TypeScript configuration
+* typed React components
+* TypeScript-specific syntax
+
+Every source file must use:
+
+```text
+.jsx
+.js
+.css
+.html
+```
+
+React components must be `.jsx` or `.js`.
+
+The entire frontend must run as a normal JavaScript Vite application.
+
+Before finishing, search the entire project for TypeScript files/configuration and remove anything TypeScript-related.
+
+---
+
+# 1. FIRST — INSPECT MY EXISTING BACKEND
+
+Before building the frontend, inspect the repository and determine:
+
+* where the frontend should live
+* whether an existing frontend exists
+* backend API base URL
+* available API endpoints
+* authentication endpoints
+* request/response formats
+* user roles
+* collection endpoints
+* collector endpoints
+* map/location endpoints
+* payment endpoints
+* notification endpoints
+* rating endpoints
+* admin endpoints
+
+If API documentation exists, read it.
+
+If there are backend files in the same repository, inspect them to understand the API.
+
+DO NOT modify the backend unless I explicitly ask you to.
+
+Create a frontend API service layer based on the actual backend endpoints.
+
+DO NOT invent endpoints when real endpoints are available.
+
+If an endpoint is genuinely missing from the backend, create a clearly isolated frontend mock only for development and document it.
+
+---
+
+# 2. PROJECT GOAL
+
+Build the frontend for a platform connecting:
+
+### Customers / Households
+
+People who need waste collected from their homes.
+
+### Waste Collectors
+
+Drivers/collection companies who collect waste from customers.
+
+### Administrators
+
+Operators who manage customers, collectors, collection requests, routes, pricing, vehicles, and analytics.
+
+---
+
+# 3. CORE USER JOURNEYS
+
+The application must support three major experiences.
+
+## CUSTOMER
+
+```text
+Register/Login
+     ↓
+Customer Dashboard
+     ↓
+Set Home Location
+     ↓
+Request Waste Pickup
+     ↓
+Select Waste Type
+     ↓
+Select Quantity
+     ↓
+Select Date/Time
+     ↓
+View Estimated Price
+     ↓
+Confirm Request
+     ↓
+Collector Assigned
+     ↓
+Track Collection
+     ↓
+Collection Completed
+     ↓
+Payment
+     ↓
+Rate Collector
+```
+
+## COLLECTOR
+
+```text
+Register/Login
+     ↓
+Collector Verification
+     ↓
+Collector Dashboard
+     ↓
+See Available Jobs
+     ↓
+Accept Job
+     ↓
+View Optimized Route
+     ↓
+Start Route
+     ↓
+Navigate to Customer
+     ↓
+Arrive
+     ↓
+Collect Waste
+     ↓
+Mark Completed
+     ↓
+View Earnings
+     ↓
+View Fuel/Distance Statistics
+```
+
+## ADMIN
+
+```text
+Login
+ ↓
+Admin Dashboard
+ ↓
+Monitor Customers
+ ↓
+Monitor Collectors
+ ↓
+Monitor Collections
+ ↓
+Monitor Routes
+ ↓
+View Map
+ ↓
+View Revenue
+ ↓
+View Fuel Costs
+ ↓
+Manage Pricing
+ ↓
+Manage Service Areas
+```
+
+---
+
+# 4. LANDING PAGE
+
+Create a highly polished landing page.
+
+Hero section:
+
+## Cleaner Homes.
+
+## Smarter Routes.
+
+## A Cleaner Ghana.
+
+Supporting text:
+
+> Book reliable waste collection from your home, track your pickup, and help build a cleaner, more connected Ghana.
+
+Primary button:
+
+**Book a Pickup**
+
+Secondary button:
+
+**Become a Collector**
+
+Include:
+
+* navigation bar
+* hero section
+* statistics
+* how it works
+* waste categories
+* customer benefits
+* collector benefits
+* smart logistics section
+* map/logistics visualization
+* environmental impact
+* service areas
+* testimonials
+* FAQ
+* CTA
+* footer
+
+---
+
+# 5. DESIGN DIRECTION
+
+The website should look like a serious modern technology startup.
+
+Do NOT make it look like a generic template.
+
+Visual style:
+
+* modern
+* clean
+* professional
+* environmental
+* Ghana-focused
+* trustworthy
+* minimal
+* mobile-first
+
+Suggested colors:
+
+* deep green
+* lighter green
+* white
+* charcoal
+* neutral gray
+* subtle environmental accent colors
+
+Use green intelligently.
+
+Do not make every element green.
+
+Use:
+
+* cards
+* shadows
+* subtle gradients
+* rounded corners
+* clean typography
+* good spacing
+* subtle animations
+
+Do not overuse animations.
+
+---
+
+# 6. RESPONSIVE DESIGN
+
+This is extremely important.
+
+The website must work properly on:
+
+* 320px mobile
+* 375px mobile
+* 390px mobile
+* 430px mobile
+* tablets
+* laptops
+* desktop
+* large monitors
+
+Do not simply shrink the desktop layout.
+
+Design mobile layouts intentionally.
+
+The collector interface should be particularly optimized for phones.
+
+---
+
+# 7. NAVIGATION
+
+Create separate navigation experiences.
+
+## Public
+
+```text
+Home
+How It Works
+Services
+For Collectors
+About
+Contact
+Login
+Get Started
+```
+
+## Customer
+
+```text
+Dashboard
+Request Pickup
+My Pickups
+Track Pickup
+Map
+Notifications
+Profile
+```
+
+## Collector
+
+```text
+Dashboard
+Jobs
+Today's Route
+Map
+Earnings
+Vehicle
+Notifications
+Profile
+```
+
+## Admin
+
+```text
+Dashboard
+Collections
+Customers
+Collectors
+Vehicles
+Routes
+Map
+Pricing
+Fuel
+Analytics
+Settings
+```
+
+Use responsive sidebars on desktop and bottom navigation/drawers where appropriate on mobile.
+
+---
+
+# 8. AUTHENTICATION
+
+Connect the frontend to my existing authentication API.
+
+Support:
+
+* registration
+* login
+* logout
+* protected routes
+* role-based routing
+* session persistence
+
+Roles:
+
+```text
+CUSTOMER
+COLLECTOR
+ADMIN
+```
+
+After login, redirect users according to their role.
+
+For example:
+
+```text
+CUSTOMER → /dashboard
+COLLECTOR → /collector/dashboard
+ADMIN → /admin/dashboard
+```
+
+Do not allow users to access another role's dashboard.
+
+---
+
+# 9. CUSTOMER DASHBOARD
+
+Create a beautiful dashboard.
+
+Show:
+
+### Next Pickup
+
+```text
+Tomorrow
+10:00 AM
+General Household Waste
+Collector: Assigned
+```
+
+### Statistics
+
+```text
+Total Pickups
+12
+
+This Month
+4
+
+Total Waste
+84 kg
+
+Total Spent
+GH₵XXX
+```
+
+### Quick Actions
+
+```text
+Request Pickup
+Track Pickup
+View History
+```
+
+---
+
+# 10. REQUEST PICKUP
+
+This is one of the most important screens.
+
+Create a clear multi-step booking experience.
+
+### STEP 1 — LOCATION
+
+Allow the user to:
+
+* use current location
+* search address
+* select location on map
+* drag marker
+* confirm location
+
+Display:
+
+```text
+Address
+Latitude
+Longitude
+```
+
+---
+
+### STEP 2 — WASTE TYPE
+
+Display attractive cards:
+
+```text
+General Waste
+Organic
+Plastic
+Paper
+Glass
+Metal
+Recyclables
+E-Waste
+Bulky Waste
+```
+
+The actual categories should come from the backend when available.
+
+---
+
+### STEP 3 — QUANTITY
+
+Simple choices:
+
+```text
+Small
+Medium
+Large
+Extra Large
+```
+
+Also allow:
+
+```text
+Number of bags
+Estimated kg
+Number of bins
+```
+
+Do not force ordinary customers to know exact weight.
+
+---
+
+### STEP 4 — PICKUP DATE
+
+Allow the user to choose a date.
+
+---
+
+### STEP 5 — PICKUP TIME
+
+Display available time slots from the backend if supported.
+
+---
+
+### STEP 6 — PRICE
+
+Show a transparent breakdown.
+
+Example:
+
+```text
+Base Collection       GH₵20
+Distance              GH₵8
+Waste Quantity        GH₵10
+--------------------------------
+Estimated Total       GH₵38
+```
+
+Clearly label it:
+
+**Estimated price**
+
+if the final amount can change.
+
+---
+
+### STEP 7 — CONFIRM
+
+Display:
+
+* location
+* waste
+* quantity
+* date
+* time
+* estimated price
+
+Then:
+
+**Confirm Pickup**
+
+---
+
+# 11. CUSTOMER PICKUP TRACKING
+
+Create a real-time-looking tracking interface using the actual backend data.
+
+Show:
+
+```text
+REQUESTED
+   ↓
+CONFIRMED
+   ↓
+COLLECTOR ASSIGNED
+   ↓
+EN ROUTE
+   ↓
+ARRIVED
+   ↓
+COLLECTED
+   ↓
+COMPLETED
+```
+
+Display:
+
+* collector name
+* vehicle
+* phone/contact option if provided
+* ETA
+* current status
+* map
+* pickup location
+
+If live GPS is available from the backend, display the collector on the map.
+
+Do not fake live tracking in production.
+
+---
+
+# 12. MAPS
+
+Maps are a CORE feature.
+
+Use the mapping provider supported by the backend/project.
+
+Possible providers:
+
+* Mapbox
+* Google Maps
+* OpenStreetMap
+
+Keep the map implementation modular.
+
+Create components such as:
+
+```text
+MapView
+LocationPicker
+CollectorMarker
+CustomerMarker
+RoutePolyline
+RouteStops
+```
+
+The map must support:
+
+* customer location
+* collector location
+* route
+* pickup markers
+* current location
+* service area
+
+---
+
+# 13. COLLECTOR DASHBOARD
+
+The collector dashboard must be mobile-first.
+
+Show:
+
+```text
+Good Morning
+
+Today's Jobs
+5
+
+Completed
+3
+
+Distance
+42.7 km
+
+Estimated Fuel
+5.2 L
+
+Estimated Fuel Cost
+GH₵XX
+
+Today's Earnings
+GH₵XXX
+```
+
+Main button:
+
+**START TODAY'S ROUTE**
+
+---
+
+# 14. COLLECTOR JOBS
+
+Create a job feed.
+
+Each job card should show:
+
+```text
+Customer
+Area
+Waste Type
+Estimated Quantity
+Distance
+Pickup Time
+Estimated Earnings
+Status
+```
+
+Buttons:
+
+```text
+View
+Accept
+Reject
+```
+
+depending on the backend workflow.
+
+---
+
+# 15. COLLECTOR ROUTE
+
+Create a dedicated route screen.
+
+Example:
+
+```text
+TODAY'S ROUTE
+
+1. Customer A
+   2.1 km
+   10:00 AM
+
+2. Customer B
+   1.8 km
+   10:30 AM
+
+3. Customer C
+   3.4 km
+   11:15 AM
+```
+
+Show the complete route on a map.
+
+Include:
+
+**Start Route**
+
+and navigation functionality where supported.
+
+---
+
+# 16. GHANA FUEL INFORMATION
+
+The frontend must display fuel-related information supplied by the backend.
+
+Do NOT hard-code Ghana fuel prices.
+
+The backend should provide current/configured fuel prices.
+
+Display:
+
+```text
+Vehicle
+Fuel Type
+Fuel Economy
+Route Distance
+Estimated Fuel
+Estimated Fuel Cost
+```
+
+Example:
+
+```text
+Distance: 45 km
+Fuel Economy: 9 km/L
+Estimated Fuel: 5 L
+Fuel Price: GH₵X/L
+Estimated Fuel Cost: GH₵X
+```
+
+Clearly label these as estimates.
+
+---
+
+# 17. COLLECTOR VEHICLE PAGE
+
+Display:
+
+* vehicle type
+* make
+* model
+* registration
+* fuel type
+* fuel economy
+* capacity
+* verification status
+
+Allow editing if the backend supports it.
+
+---
+
+# 18. COLLECTOR EARNINGS
+
+Create:
+
+```text
+Today's Earnings
+Weekly Earnings
+Monthly Earnings
+Total Earnings
+```
+
+Include charts where appropriate.
+
+Also show:
+
+```text
+Completed Jobs
+Distance
+Fuel Cost
+Net Estimated Earnings
+```
+
+---
+
+# 19. ADMIN DASHBOARD
+
+Create a serious operations dashboard.
+
+Top KPIs:
+
+```text
+Total Customers
+Active Collectors
+Today's Pickups
+Completed Pickups
+Revenue
+Waste Collected
+Total Distance
+Estimated Fuel
+Estimated Fuel Cost
+```
+
+Charts:
+
+* pickups over time
+* revenue
+* waste categories
+* collector activity
+* fuel consumption
+* collection areas
+
+---
+
+# 20. ADMIN MAP
+
+Create a large operational map.
+
+Display:
+
+* active collectors
+* pending pickups
+* assigned pickups
+* active routes
+* completed pickups
+* service areas
+
+Allow clicking markers to show details.
+
+---
+
+# 21. PRICING
+
+If pricing configuration endpoints exist in the backend, create an admin interface.
+
+Possible configuration:
+
+```text
+Base Fee
+Distance Fee
+Quantity Fee
+Waste Type Fee
+Urgency Fee
+Weekend Fee
+```
+
+Do not put pricing rules directly into React.
+
+Always consume the backend pricing result.
+
+---
+
+# 22. FUEL MANAGEMENT
+
+If supported by the backend, create an admin fuel management page.
+
+Display:
+
+```text
+Fuel Type
+Current Price
+Previous Price
+Effective Date
+```
+
+Allow administrators to update fuel prices.
+
+Do not modify backend logic from the frontend.
+
+---
+
+# 23. NOTIFICATIONS
+
+Create a notification center.
+
+Examples:
+
+```text
+Your pickup has been confirmed.
+
+Your collector is on the way.
+
+Your pickup has been completed.
+
+New collection job available.
+
+Your collector verification has been approved.
+```
+
+Use unread/read states.
+
+---
+
+# 24. RATINGS
+
+After a completed pickup:
+
+```text
+How was your collection?
+
+★★★★★
+
+Punctuality
+Professionalism
+Communication
+
+Comment
+```
+
+Submit to the existing backend rating endpoint.
+
+Do not allow ratings for incomplete/cancelled jobs.
+
+---
+
+# 25. ERROR HANDLING
+
+Every API request must have proper:
+
+* loading state
+* success state
+* error state
+* empty state
+
+Do not show raw server errors to users.
+
+Instead:
+
+```text
+Something went wrong.
+Please try again.
+```
+
+Log useful technical details to the console during development.
+
+---
+
+# 26. API ARCHITECTURE
+
+Create a clean frontend API layer.
+
+For example:
+
+```text
+src/
+  api/
+    auth.js
+    customers.js
+    collectors.js
+    collections.js
+    routes.js
+    maps.js
+    payments.js
+    notifications.js
+    admin.js
+```
+
+Use a centralized API client.
+
+Example structure:
+
+```text
+src/
+  components/
+  pages/
+  layouts/
+  hooks/
+  context/
+  services/
+  api/
+  utils/
+  assets/
+```
+
+Keep components reusable.
+
+---
+
+# 27. STATE MANAGEMENT
+
+Do not put everything into one giant React state.
+
+Use:
+
+* React Context where appropriate
+* TanStack Query for server state
+* local component state for UI state
+
+Use caching and invalidation properly.
+
+---
+
+# 28. FORMS
+
+Use React Hook Form for complex forms.
+
+Validate inputs.
+
+Examples:
+
+* phone number
+* email
+* address
+* quantity
+* date
+* time
+* vehicle information
+
+Show clear validation messages.
+
+---
+
+# 29. LOADING UX
+
+Use skeleton loaders for:
+
+* dashboards
+* cards
+* tables
+* maps
+* route lists
+
+Do not make users stare at blank screens.
+
+---
+
+# 30. MOBILE UX
+
+For mobile:
+
+Customer bottom navigation:
+
+```text
+Home
+Pickups
+Map
+Notifications
+Profile
+```
+
+Collector bottom navigation:
+
+```text
+Home
+Jobs
+Route
+Earnings
+Profile
+```
+
+Use large touch targets.
+
+Do not put important actions in tiny icons.
+
+---
+
+# 31. ADMIN DESKTOP UX
+
+Desktop admin layout:
+
+```text
+┌──────────────┬─────────────────────────┐
+│              │                         │
+│   SIDEBAR    │       CONTENT           │
+│              │                         │
+│ Dashboard    │                         │
+│ Collections  │                         │
+│ Collectors   │                         │
+│ Customers    │                         │
+│ Routes       │                         │
+│ Analytics    │                         │
+│ Settings     │                         │
+│              │                         │
+└──────────────┴─────────────────────────┘
+```
+
+Make it responsive for tablets as well.
+
+---
+
+# 32. PERFORMANCE
+
+Optimize the frontend for mobile networks.
+
+Implement:
+
+* lazy loading
+* route-level code splitting
+* optimized images
+* API caching
+* pagination
+* debounced search
+* efficient map loading
+* minimal unnecessary API requests
+
+Do not load everything at once.
+
+---
+
+# 33. SECURITY
+
+Never expose secrets in frontend code.
+
+Use environment variables only for values that are safe to expose to the browser, such as public map keys where applicable.
+
+Never put:
+
+* database credentials
+* private API secrets
+* JWT signing secrets
+* payment secret keys
+
+into frontend environment variables.
+
+---
+
+# 34. ENVIRONMENT CONFIGURATION
+
+Create:
+
+```text
+.env.example
+```
+
+for frontend-safe variables.
+
+For example:
+
+```text
+VITE_API_BASE_URL=
+VITE_MAP_API_KEY=
+```
+
+Only include values that are actually needed.
+
+Use the actual backend API URL rather than inventing one.
+
+---
+
+# 35. NO FAKE FUNCTIONALITY
+
+Do NOT create buttons that appear functional but do nothing.
+
+Every major button must:
+
+* navigate
+* submit
+* call an API
+* open a modal
+* update state
+* or perform a clearly defined action
+
+If backend functionality does not exist, show the feature as unavailable rather than pretending it works.
+
+---
+
+# 36. NO PLACEHOLDER DASHBOARD
+
+Do not create a dashboard consisting only of:
+
+```text
+Card
+Card
+Card
+Fake Chart
+Fake Table
+```
+
+Connect dashboard statistics to the real backend.
+
+If the backend has no analytics endpoint, derive the information from available APIs where reasonable.
+
+Clearly identify any temporary demo data.
+
+---
+
+# 37. GHANA-SPECIFIC UI
+
+Use:
+
+```text
+GH₵
+```
+
+for money.
+
+Support Ghana phone numbers:
+
+```text
++233 XX XXX XXXX
+```
+
+Use Ghanaian locations in demo data where appropriate.
+
+Examples:
+
+* Accra
+* Tema
+* Madina
+* Adenta
+* East Legon
+* Spintex
+* Kasoa
+* Kumasi
+
+Do not use real people's personal information.
+
+---
+
+# 38. ACCESSIBILITY
+
+Implement:
+
+* semantic HTML
+* accessible labels
+* keyboard navigation
+* focus states
+* proper contrast
+* screen-reader-friendly forms
+* accessible dialogs
+* accessible buttons
+
+---
+
+# 39. PROJECT STRUCTURE
+
+Aim for a structure similar to:
+
+```text
+src/
+│
+├── assets/
+│
+├── components/
+│   ├── ui/
+│   ├── maps/
+│   ├── customer/
+│   ├── collector/
+│   └── admin/
+│
+├── pages/
+│   ├── public/
+│   ├── customer/
+│   ├── collector/
+│   └── admin/
+│
+├── layouts/
+│
+├── api/
+│
+├── services/
+│
+├── hooks/
+│
+├── context/
+│
+├── utils/
+│
+├── routes/
+│
+├── App.jsx
+└── main.jsx
+```
+
+Adjust this structure if the existing project already has a better architecture.
+
+---
+
+# 40. REACT ROUTING
+
+Create protected routes.
+
+Example:
+
+```text
+/
+ /login
+ /register
+
+ /dashboard
+ /pickup
+ /pickups
+ /pickup/:id
+ /map
+ /profile
+
+ /collector/dashboard
+ /collector/jobs
+ /collector/route
+ /collector/earnings
+ /collector/vehicle
+
+ /admin/dashboard
+ /admin/collections
+ /admin/customers
+ /admin/collectors
+ /admin/routes
+ /admin/map
+ /admin/fuel
+ /admin/pricing
+ /admin/analytics
+```
+
+Do not allow unauthorized roles to access these pages.
+
+---
+
+# 41. BUILD ORDER
+
+Do not attempt everything at once.
+
+Implement in this order:
+
+### PHASE 1
+
+Inspect backend and existing repository.
+
+### PHASE 2
+
+Set up React + Vite JavaScript frontend.
+
+### PHASE 3
+
+Build:
+
+* routing
+* authentication
+* layouts
+* design system
+
+### PHASE 4
+
+Build customer experience.
+
+### PHASE 5
+
+Build collector experience.
+
+### PHASE 6
+
+Build maps.
+
+### PHASE 7
+
+Build admin dashboard.
+
+### PHASE 8
+
+Connect all API functionality.
+
+### PHASE 9
+
+Implement responsive optimization.
+
+### PHASE 10
+
+Testing and final polish.
+
+---
+
+# 42. TESTING REQUIREMENT
+
+After implementing each major feature:
+
+1. Run the frontend.
+2. Check browser console.
+3. Check network requests.
+4. Test the API integration.
+5. Fix errors.
+6. Test mobile responsiveness.
+7. Continue.
+
+Before declaring the project complete:
+
+* run production build
+* fix all build errors
+* check console errors
+* test authentication
+* test customer flow
+* test collector flow
+* test admin flow
+* test maps
+* test API requests
+* test mobile layouts
+* test desktop layouts
+
+---
+
+# 43. FINAL REQUIREMENT — SEARCH FOR TYPESCRIPT
+
+Before completion, run a complete search through the frontend.
+
+There must be:
+
+```text
+NO .ts files
+NO .tsx files
+NO tsconfig.json
+NO TypeScript imports
+NO TypeScript interfaces
+NO TypeScript type declarations
+NO TypeScript-specific syntax
+```
+
+The final frontend must be:
+
+**React + Vite + JavaScript**
+
+ONLY.
+
+---
+
+# 44. DO NOT MODIFY MY BACKEND
+
+The backend already exists.
+
+Treat it as an external API.
+
+If the backend is in the same repository:
+
+* inspect it
+* understand it
+* consume it
+* do not rewrite it
+
+Only modify backend files if I explicitly tell you to.
+
+---
+
+# 45. START NOW
+
+Start by:
+
+1. Inspecting the repository.
+2. Finding the existing backend.
+3. Understanding its API.
+4. Identifying the frontend location.
+5. Checking whether a frontend already exists.
+6. Checking the current package.json.
+7. Confirming the project is JavaScript.
+8. Creating the React + Vite frontend if necessary.
+9. Connecting it to the existing API.
+10. Building the public landing page.
+11. Building authentication.
+12. Building the customer dashboard.
+13. Building the collector dashboard.
+14. Building the admin dashboard.
+15. Implementing maps.
+16. Implementing responsive design.
+17. Testing everything.
+
+Do not stop at a visual mockup.
+
+The goal is a **fully functional frontend connected to the existing backend**.
+
+Do not create TypeScript.
+
+Do not create a new backend.
+
+Do not replace the existing backend.
+
+Build the actual application.
