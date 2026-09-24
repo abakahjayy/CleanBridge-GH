@@ -125,9 +125,94 @@ function CustomerDashboard() {
 function PickupRequest() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [selectedWaste, setSelectedWaste] = useState('Household mix');
+  const [selectedQuantity, setSelectedQuantity] = useState('1 bag');
   const [, navigate] = useLocation();
+  const wasteTypes = ['Household mix', 'Recyclables', 'Garden waste', 'Bulky items', 'Large waste bin'];
+  const quantityOptions = selectedWaste === 'Large waste bin'
+    ? ['1 large bin', '2 large bins', '3 large bins', '4+ large bins']
+    : ['1 bag', '2 bags', '3 bags', '4+ bags'];
   const next = () => step < 3 ? setStep(step + 1) : (setSubmitted(true), setTimeout(() => navigate('/pickups'), 800));
-  return <Shell role="customer" title="Request a pickup" subtitle="Tell us what is waiting at your gate."><div className="form-card panel"><PreviewNote /><div className="stepper" style={{ marginTop: '1.6rem' }}>{['Waste & quantity', 'When & where', 'Review'].map((label, index) => <span key={label} className={`step ${step >= index + 1 ? 'active' : ''}`}><i>{step > index + 1 ? <Check size={12} /> : index + 1}</i><span>{label}</span>{index < 2 && <b className="step-line" />}</span>)}</div>{step === 1 && <div><div className="eyebrow">Step 01</div><h2 className="display" style={{ margin: '.5rem 0 .4rem' }}>What should we collect?</h2><p className="muted" style={{ fontSize: '.8rem', marginBottom: '1.5rem' }}>Choose the closest match. You can tell the collector more at handoff.</p><div className="field"><label>Waste type</label><div className="choice-grid">{['Household mix', 'Recyclables', 'Garden waste', 'Bulky items', 'Large waste bin'].map((x, i) => <label className="choice" key={x}><input type="radio" name="waste" defaultChecked={i === 0} />{x}</label>)}</div></div><div className="field"><label htmlFor="quantity">How many bags, bundles, or bins?</label><select id="quantity" data-testid="select-quantity"><option>1 bag</option><option>2 bags</option><option>3 bags</option><option>4+ bags</option><option>1 large bin</option></select></div></div>}{step === 2 && <div><div className="eyebrow">Step 02</div><h2 className="display" style={{ margin: '.5rem 0 .4rem' }}>Set the handoff.</h2><p className="muted" style={{ fontSize: '.8rem', marginBottom: '1.5rem' }}>Our route team will confirm the closest arrival window.</p><div className="input-grid"><div className="field"><label htmlFor="date">Preferred date</label><input id="date" type="date" defaultValue="2024-06-18" data-testid="input-pickup-date" /></div><div className="field"><label htmlFor="time">Preferred time</label><select id="time" data-testid="select-pickup-time"><option>08:00 – 10:00</option><option>10:00 – 12:00</option><option>14:00 – 16:00</option></select></div></div><div className="field"><label htmlFor="address">Collection address</label><input id="address" defaultValue="House 14, East Legon Hills" data-testid="input-address" /></div><div className="field"><label htmlFor="note">Gate note <span className="muted">(optional)</span></label><textarea id="note" rows="3" placeholder="Anything that helps your collector find you?" data-testid="input-gate-note" /></div></div>}{step === 3 && <div><div className="eyebrow">Step 03</div><h2 className="display" style={{ margin: '.5rem 0 .4rem' }}>Check the details.</h2><p className="muted" style={{ fontSize: '.8rem', marginBottom: '1.5rem' }}>This is a preview estimate. The live service will confirm availability and price.</p><div className="data-list panel" style={{ padding: '0 1rem' }}>{[['Waste', 'Household mix · 3 bags'], ['When', 'Tuesday, 18 Jun · 08:00 – 10:00'], ['Where', 'House 14, East Legon Hills'], ['Estimate', 'GH₵ 42.00']].map(([a, b]) => <div className="data-row" key={a}><span className="muted" style={{ fontSize: '.75rem' }}>{a}</span><strong style={{ fontSize: '.8rem' }}>{b}</strong></div>)}</div><div className="preview-note" style={{ marginTop: '1rem' }}><ShieldCheck size={14} /><span>This request will be saved only as a preview until the collection service is connected.</span></div></div>}<div style={{ display: 'flex', justifyContent: 'space-between', gap: '.7rem', marginTop: '2rem' }}>{step > 1 ? <button className="btn btn-outline" onClick={() => setStep(step - 1)} data-testid="button-pickup-back"><ArrowLeft size={15} /> Back</button> : <span />}{submitted ? <button className="btn btn-primary" disabled data-testid="button-pickup-submit"><LoaderCircle size={15} /> Saving preview</button> : <button className="btn btn-primary" onClick={next} data-testid="button-pickup-next">{step === 3 ? 'Save preview request' : 'Continue'} <ArrowRight size={15} /></button>}</div></div></Shell>;
+  return <Shell role="customer" title="Request a pickup" subtitle="Tell us what is waiting at your gate.">
+    <div className="form-card panel">
+      <PreviewNote />
+      <div className="stepper" style={{ marginTop: '1.6rem' }}>
+        {['Waste & quantity', 'When & where', 'Review'].map((label, index) => (
+          <span key={label} className={`step ${step >= index + 1 ? 'active' : ''}`}>
+            <i>{step > index + 1 ? <Check size={12} /> : index + 1}</i>
+            <span>{label}</span>
+            {index < 2 && <b className="step-line" />}
+          </span>
+        ))}
+      </div>
+
+      {step === 1 && <div>
+        <div className="eyebrow">Step 01</div>
+        <h2 className="display" style={{ margin: '.5rem 0 .4rem' }}>What should we collect?</h2>
+        <p className="muted" style={{ fontSize: '.8rem', marginBottom: '1.5rem' }}>Choose the closest match. You can tell the collector more at handoff.</p>
+        <div className="field">
+          <label>Waste type</label>
+          <div className="choice-grid">
+            {wasteTypes.map((waste) => (
+              <label className="choice" key={waste}>
+                <input
+                  type="radio"
+                  name="waste"
+                  value={waste}
+                  checked={selectedWaste === waste}
+                  onChange={() => {
+                    setSelectedWaste(waste);
+                    setSelectedQuantity(waste === 'Large waste bin' ? '1 large bin' : '1 bag');
+                  }}
+                />
+                {waste}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="quantity">How many bags, bundles, or bins?</label>
+          <select id="quantity" value={selectedQuantity} onChange={(event) => setSelectedQuantity(event.target.value)} data-testid="select-quantity">
+            {quantityOptions.map((quantity) => <option key={quantity}>{quantity}</option>)}
+          </select>
+        </div>
+      </div>}
+
+      {step === 2 && <div>
+        <div className="eyebrow">Step 02</div>
+        <h2 className="display" style={{ margin: '.5rem 0 .4rem' }}>Set the handoff.</h2>
+        <p className="muted" style={{ fontSize: '.8rem', marginBottom: '1.5rem' }}>Our route team will confirm the closest arrival window.</p>
+        <div className="input-grid">
+          <div className="field"><label htmlFor="date">Preferred date</label><input id="date" type="date" defaultValue="2024-06-18" data-testid="input-pickup-date" /></div>
+          <div className="field"><label htmlFor="time">Preferred time</label><select id="time" data-testid="select-pickup-time"><option>08:00 – 10:00</option><option>10:00 – 12:00</option><option>14:00 – 16:00</option></select></div>
+        </div>
+        <div className="field"><label htmlFor="address">Collection address</label><input id="address" defaultValue="House 14, East Legon Hills" data-testid="input-address" /></div>
+        <div className="field"><label htmlFor="note">Gate note <span className="muted">(optional)</span></label><textarea id="note" rows="3" placeholder="Anything that helps your collector find you?" data-testid="input-gate-note" /></div>
+      </div>}
+
+      {step === 3 && <div>
+        <div className="eyebrow">Step 03</div>
+        <h2 className="display" style={{ margin: '.5rem 0 .4rem' }}>Check the details.</h2>
+        <p className="muted" style={{ fontSize: '.8rem', marginBottom: '1.5rem' }}>This is a preview estimate. The live service will confirm availability and price.</p>
+        <div className="data-list panel" style={{ padding: '0 1rem' }}>
+          {[
+            ['Waste', `${selectedWaste} · ${selectedQuantity}`],
+            ['When', 'Tuesday, 18 Jun · 08:00 – 10:00'],
+            ['Where', 'House 14, East Legon Hills'],
+            ['Estimate', 'GH₵ 42.00']
+          ].map(([label, value]) => <div className="data-row" key={label}><span className="muted" style={{ fontSize: '.75rem' }}>{label}</span><strong style={{ fontSize: '.8rem' }}>{value}</strong></div>)}
+        </div>
+        <div className="preview-note" style={{ marginTop: '1rem' }}><ShieldCheck size={14} /><span>This request will be saved only as a preview until the collection service is connected.</span></div>
+      </div>}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '.7rem', marginTop: '2rem' }}>
+        {step > 1 ? <button className="btn btn-outline" onClick={() => setStep(step - 1)} data-testid="button-pickup-back"><ArrowLeft size={15} /> Back</button> : <span />}
+        {submitted
+          ? <button className="btn btn-primary" disabled data-testid="button-pickup-submit"><LoaderCircle size={15} /> Saving preview</button>
+          : <button className="btn btn-primary" onClick={next} data-testid="button-pickup-next">{step === 3 ? 'Save preview request' : 'Continue'} <ArrowRight size={15} /></button>}
+      </div>
+    </div>
+  </Shell>;
 }
 
 function Pickups() {
