@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Link, Route, Router, Switch, useLocation, useRoute } from 'wouter';
 import {
   Activity, ArrowLeft, ArrowRight, BarChart3, Bell, CalendarDays,
   Check, ChevronRight, CircleDollarSign, Clock3, Fuel, LayoutDashboard,
-  ListFilter, LoaderCircle, Map, MapPin, Menu, PackageCheck, Phone,
+  ListFilter, LoaderCircle, Map, MapPin, Menu, Moon, PackageCheck, Phone,
   Plus, Route as RouteIcon, Search, Settings2, ShieldCheck, Sparkles,
-  Truck, UserRound, UsersRound, WalletCards, X, Zap
+  Sun, Truck, UserRound, UsersRound, WalletCards, X, Zap
 } from 'lucide-react';
 
 const demoData = {
@@ -57,8 +57,17 @@ const navSets = {
   ]
 };
 
+const ThemeContext = createContext({ theme: 'light', toggleTheme: () => {} });
+
 function Logo({ dark = false }) {
   return <span className="brand-mark" data-testid="brand-logo"><span className="brand-symbol"><Sparkles size={16} /></span><span>cleanbridge <b>GH</b></span></span>;
+}
+
+function ThemeToggle() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  const isDark = theme === 'dark';
+  const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+  return <button className="icon-btn theme-toggle" onClick={toggleTheme} aria-label={label} title={label} data-testid="button-theme-toggle">{isDark ? <Sun size={16} /> : <Moon size={16} />}</button>;
 }
 
 function StatusBadge({ status }) {
@@ -71,7 +80,7 @@ function PreviewNote({ compact = false }) {
 }
 
 function PublicNav() {
-  return <nav className="public-nav"><Link href="/" data-testid="link-public-logo"><Logo /></Link><div className="nav-links"><a href="#how-it-works" data-testid="link-how-it-works">How it works</a><a href="#for-collectors" data-testid="link-for-collectors">For collectors</a><a href="#areas" data-testid="link-areas">Areas we serve</a></div><div style={{ display: 'flex', gap: '.5rem' }}><Link className="btn btn-ghost" href="/login" data-testid="link-login">Log in</Link><Link className="btn btn-secondary btn-sm" href="/register" data-testid="link-register">Join CleanBridge</Link></div></nav>;
+  return <nav className="public-nav"><Link href="/" data-testid="link-public-logo"><Logo /></Link><div className="nav-links"><a href="#how-it-works" data-testid="link-how-it-works">How it works</a><a href="#for-collectors" data-testid="link-for-collectors">For collectors</a><a href="#areas" data-testid="link-areas">Areas we serve</a></div><div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}><ThemeToggle /><Link className="btn btn-ghost" href="/login" data-testid="link-login">Log in</Link><Link className="btn btn-secondary btn-sm" href="/register" data-testid="link-register">Join CleanBridge</Link></div></nav>;
 }
 
 function Landing() {
@@ -115,7 +124,7 @@ function Sidebar({ role }) {
 function Shell({ role, children, title, subtitle }) {
   const [toast, setToast] = useState('');
   const notify = (message) => { setToast(message); setTimeout(() => setToast(''), 2600); };
-  return <div className="app-shell"><Sidebar role={role} /><main className="app-main"><header className="topbar"><div className="topbar-title"><button className="icon-btn mobile-menu" data-testid="button-mobile-menu"><Menu size={18} /></button><div><h1 data-testid="text-page-title">{title}</h1><p>{subtitle}</p></div></div><div className="topbar-actions"><button className="icon-btn" onClick={() => notify('Live notifications are available in the full service.')} data-testid="button-notifications"><Bell size={17} /></button><Link href={role === 'admin' ? '/admin/dashboard' : role === 'collector' ? '/collector/dashboard' : '/profile'} className="avatar" data-testid="link-topbar-profile">{role === 'admin' ? 'OP' : role === 'collector' ? 'KM' : 'AO'}</Link></div></header><div className="page-content fade-in">{children}</div>{toast && <div className="toast" data-testid="toast-message">{toast}</div>}</main></div>;
+  return <div className="app-shell"><Sidebar role={role} /><main className="app-main"><header className="topbar"><div className="topbar-title"><button className="icon-btn mobile-menu" data-testid="button-mobile-menu"><Menu size={18} /></button><div><h1 data-testid="text-page-title">{title}</h1><p>{subtitle}</p></div></div><div className="topbar-actions"><ThemeToggle /><button className="icon-btn" onClick={() => notify('Live notifications are available in the full service.')} data-testid="button-notifications"><Bell size={17} /></button><Link href={role === 'admin' ? '/admin/dashboard' : role === 'collector' ? '/collector/dashboard' : '/profile'} className="avatar" data-testid="link-topbar-profile">{role === 'admin' ? 'OP' : role === 'collector' ? 'KM' : 'AO'}</Link></div></header><div className="page-content fade-in">{children}</div>{toast && <div className="toast" data-testid="toast-message">{toast}</div>}</main></div>;
 }
 
 function CustomerDashboard() {
@@ -304,5 +313,17 @@ function RouteView() {
 }
 
 export default function App() {
-  return <Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}><RouteView /></Router>;
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === 'undefined') return 'light';
+    return localStorage.getItem('cleanbridge-theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('cleanbridge-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
+
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}><Router base={import.meta.env.BASE_URL.replace(/\/$/, '')}><RouteView /></Router></ThemeContext.Provider>;
 }
