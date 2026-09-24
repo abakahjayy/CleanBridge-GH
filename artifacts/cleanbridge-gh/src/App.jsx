@@ -24,6 +24,11 @@ const demoData = {
     { id: 'CB-1050', customer: 'Kofi Antwi', area: 'Adjiringanor', time: '10:30 – 12:00', type: 'Recyclables', bags: '5 bags', status: 'Queued' },
     { id: 'CB-1052', customer: 'Mavis Addo', area: 'Ogbodjo', time: '13:30 – 15:00', type: 'Household mix', bags: '2 bags', status: 'Queued' }
   ],
+  nearbyRequests: [
+    { id: 'CB-1061', customer: 'Nana Yaa', area: 'East Legon Hills', distance: '1.4 km away', time: '08:30 – 10:00', type: 'Household mix', bags: '3 bags', estimatedEarnings: 'GH₵ 36.00', status: 'Nearby' },
+    { id: 'CB-1064', customer: 'Adwoa Mensima', area: 'Adjiringanor', distance: '2.1 km away', time: '09:00 – 11:00', type: 'Large waste bin', bags: '2 large bins', estimatedEarnings: 'GH₵ 58.00', status: 'Nearby' },
+    { id: 'CB-1067', customer: 'Kwame Boateng', area: 'American House', distance: '3.7 km away', time: '10:00 – 12:00', type: 'Recyclables', bags: '4 bags', estimatedEarnings: 'GH₵ 31.00', status: 'Nearby' }
+  ],
   route: { id: 'RT-0624', date: 'Tuesday, 18 June', stops: 18, distanceKm: '32.4 km', estimatedFuelLitres: '8.6 L', estimatedFuelCost: 'GH₵ 127.84', status: 'In progress' },
   vehicle: { id: 'VH-007', type: 'Light truck', make: 'Kia', model: 'K2700', registration: 'GT 4821-22', fuelType: 'Diesel', fuelEconomy: '9.4 L / 100 km', capacity: '1.2 tonnes', verificationStatus: 'Verified' },
   routes: [
@@ -116,15 +121,30 @@ function AuthPage({ register = false }) {
   return <div className="auth-page"><div className="auth-visual"><Link href="/" data-testid="link-auth-logo"><Logo /></Link><div><div className="eyebrow" style={{ color: 'hsl(var(--secondary))' }}>CleanBridge GH / Accra</div><h1>{register ? <>Your home.<br /><span>Handled.</span></> : <>Good to see<br /><span>you again.</span></>}</h1><p>{register ? 'Join a clearer way to manage household waste, with local collectors and routes that respect your time.' : 'Your collection history, next arrival, and a cleaner routine — all in one place.'}</p></div><span style={{ color: 'rgba(255,255,255,.4)', fontSize: '.7rem' }}>Preview workspace · Live account service pending</span></div><div className="auth-form-wrap"><form className="auth-form" onSubmit={submit}><div className="eyebrow">{register ? 'Create account' : 'Welcome back'}</div><h2>{register ? 'Start with your address.' : 'Log in to CleanBridge.'}</h2><p>{register ? 'We use your area to pair you with the right collection route.' : 'Use any details to explore the prepared preview workspace.'}</p><PreviewNote compact /><div style={{ marginTop: '1.3rem' }}>{register && <div className="field"><label htmlFor="name">Full name</label><input id="name" data-testid="input-name" placeholder="Ama Osei" required /></div>}<div className="field"><label htmlFor="email">Email address</label><input id="email" type="email" data-testid="input-email" placeholder="you@example.com" required /></div>{register && <div className="field"><label htmlFor="phone">Phone number</label><input id="phone" data-testid="input-phone" placeholder="+233 24 000 0000" required /></div>}<div className="field"><label htmlFor="password">Password</label><input id="password" type="password" data-testid="input-password" placeholder="••••••••" required /></div></div><button className="btn btn-primary" style={{ width: '100%' }} disabled={submitted} data-testid="button-auth-submit">{submitted ? <><LoaderCircle size={15} /> Opening preview</> : <>{register ? 'Create preview account' : 'Open preview workspace'} <ArrowRight size={15} /></>}</button><div className="form-foot">{register ? <>Already have an account? <Link href="/login" data-testid="link-switch-login">Log in</Link></> : <>New to CleanBridge? <Link href="/register" data-testid="link-switch-register">Create an account</Link></>}</div></form></div></div>;
 }
 
-function Sidebar({ role }) {
+function Sidebar({ role, isOpen, onClose }) {
   const [location] = useLocation();
-  return <aside className="side-shell"><Link href={role === 'admin' ? '/admin/dashboard' : role === 'collector' ? '/collector/dashboard' : '/dashboard'}><Logo /></Link><div className="side-kicker">{role === 'admin' ? 'Operations' : role === 'collector' ? 'Collector workspace' : 'Household workspace'}</div><nav className="side-nav">{navSets[role].map(([label, href, Icon]) => <Link key={href} href={href} className={location === href ? 'active' : ''} data-testid={`link-nav-${href.replaceAll('/', '-').replace(/^-/, '')}`}><Icon size={17} /><span>{label}</span></Link>)}</nav><div className="side-bottom"><div className="side-preview"><Zap size={13} style={{ verticalAlign: 'middle', marginRight: '.3rem', color: 'hsl(var(--secondary))' }} />Preview data is local to this workspace.</div><Link className="side-nav" href="/"><span style={{ display: 'flex', alignItems: 'center', gap: '.7rem', padding: '.72rem .8rem', color: 'rgba(255,255,255,.5)', fontSize: '.82rem' }}><ArrowLeft size={16} />Back to public site</span></Link></div></aside>;
+  const homeHref = role === 'admin' ? '/admin/dashboard' : role === 'collector' ? '/collector/dashboard' : '/dashboard';
+  return <>
+    {isOpen && <button className="side-overlay" aria-label="Close navigation menu" onClick={onClose} />}
+    <aside className={`side-shell ${isOpen ? 'open' : ''}`}>
+      <Link href={homeHref} onClick={onClose}><Logo /></Link>
+      <div className="side-kicker">{role === 'admin' ? 'Operations' : role === 'collector' ? 'Collector workspace' : 'Household workspace'}</div>
+      <nav className="side-nav">
+        {navSets[role].map(([label, href, Icon]) => <Link key={href} href={href} onClick={onClose} className={location === href ? 'active' : ''} data-testid={`link-nav-${href.replaceAll('/', '-').replace(/^-/, '')}`}><Icon size={17} /><span>{label}</span></Link>)}
+      </nav>
+      <div className="side-bottom">
+        <div className="side-preview"><Zap size={13} style={{ verticalAlign: 'middle', marginRight: '.3rem', color: 'hsl(var(--secondary))' }} />Preview data is local to this workspace.</div>
+        <Link className="side-nav" href="/" onClick={onClose}><span style={{ display: 'flex', alignItems: 'center', gap: '.7rem', padding: '.72rem .8rem', color: 'rgba(255,255,255,.5)', fontSize: '.82rem' }}><ArrowLeft size={16} />Back to public site</span></Link>
+      </div>
+    </aside>
+  </>;
 }
 
 function Shell({ role, children, title, subtitle }) {
   const [toast, setToast] = useState('');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const notify = (message) => { setToast(message); setTimeout(() => setToast(''), 2600); };
-  return <div className="app-shell"><Sidebar role={role} /><main className="app-main"><header className="topbar"><div className="topbar-title"><button className="icon-btn mobile-menu" data-testid="button-mobile-menu"><Menu size={18} /></button><div><h1 data-testid="text-page-title">{title}</h1><p>{subtitle}</p></div></div><div className="topbar-actions"><ThemeToggle /><button className="icon-btn" onClick={() => notify('Live notifications are available in the full service.')} data-testid="button-notifications"><Bell size={17} /></button><Link href={role === 'admin' ? '/admin/dashboard' : role === 'collector' ? '/collector/dashboard' : '/profile'} className="avatar" data-testid="link-topbar-profile">{role === 'admin' ? 'OP' : role === 'collector' ? 'KM' : 'AO'}</Link></div></header><div className="page-content fade-in">{children}</div>{toast && <div className="toast" data-testid="toast-message">{toast}</div>}</main></div>;
+  return <div className="app-shell"><Sidebar role={role} isOpen={mobileNavOpen} onClose={() => setMobileNavOpen(false)} /><main className="app-main"><header className="topbar"><div className="topbar-title"><button className="icon-btn mobile-menu" onClick={() => setMobileNavOpen((open) => !open)} aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={mobileNavOpen} data-testid="button-mobile-menu">{mobileNavOpen ? <X size={18} /> : <Menu size={18} />}</button><div><h1 data-testid="text-page-title">{title}</h1><p>{subtitle}</p></div></div><div className="topbar-actions"><ThemeToggle /><button className="icon-btn" onClick={() => notify('Live notifications are available in the full service.')} data-testid="button-notifications"><Bell size={17} /></button><Link href={role === 'admin' ? '/admin/dashboard' : role === 'collector' ? '/collector/dashboard' : '/profile'} className="avatar" data-testid="link-topbar-profile">{role === 'admin' ? 'OP' : role === 'collector' ? 'KM' : 'AO'}</Link></div></header><div className="page-content fade-in">{children}</div>{toast && <div className="toast" data-testid="toast-message">{toast}</div>}</main></div>;
 }
 
 function CustomerDashboard() {
@@ -251,7 +271,43 @@ function Profile() {
 }
 
 function CollectorDashboard() {
-  return <Shell role="collector" title="Good morning, Kojo" subtitle="Tuesday, 18 June 2024 · Accra East"><PreviewNote /><div className="page-head" style={{ marginTop: '1.4rem' }}><div><div className="eyebrow">Collector workspace</div><h2>Your day, in order.</h2><p>Three stops left on this route. You’re moving well.</p></div><Link className="btn btn-secondary" href="/collector/route" data-testid="button-open-route"><RouteIcon size={15} /> Open route</Link></div><div className="grid-4"><div className="stat-card"><div className="stat-top"><span>Stops today</span><MapPin size={16} /></div><div className="stat-value">18</div><div className="stat-foot">12 completed · 6 remaining</div></div><div className="stat-card"><div className="stat-top"><span>Route status</span><Activity size={16} /></div><div className="stat-value" style={{ fontSize: '1.35rem' }}>On route</div><div className="stat-foot">Next stop in 18 min</div></div><div className="stat-card"><div className="stat-top"><span>Today’s earnings</span><WalletCards size={16} /></div><div className="stat-value">GH₵ 380</div><div className="stat-foot">+ GH₵ 42 pending</div></div><div className="stat-card"><div className="stat-top"><span>Rating</span><Sparkles size={16} /></div><div className="stat-value">4.8</div><div className="stat-foot">From 186 completed jobs</div></div></div><div className="grid-2" style={{ marginTop: '1rem' }}><div className="panel panel-pad"><div className="mini-title"><h3>Next stops</h3><Link href="/collector/jobs" data-testid="link-collector-jobs">All jobs <ChevronRight size={14} style={{ verticalAlign: 'middle' }} /></Link></div><div className="data-list">{demoData.jobs.map((job, i) => <div className="data-row" key={job.id}><div className="data-main"><strong>{i + 1}. {job.customer}</strong><span>{job.area} · {job.time}</span></div><StatusBadge status={job.status} /></div>)}</div></div><div className="panel panel-pad"><div className="mini-title"><h3>Route completion</h3><span className="mono" style={{ color: 'hsl(var(--primary))', fontSize: '.78rem' }}>67%</span></div><div className="progress" style={{ height: '.75rem' }}><span style={{ width: '67%' }} /></div><div className="data-list" style={{ marginTop: '1rem' }}><div className="data-row"><span className="muted">Vehicle</span><strong>{demoData.vehicle.registration}</strong></div><div className="data-row"><span className="muted">Fuel estimate</span><strong>{demoData.route.estimatedFuelLitres}</strong></div><div className="data-row"><span className="muted">Route distance</span><strong>{demoData.route.distanceKm}</strong></div></div></div></div></Shell>;
+  const [nearbyRequests, setNearbyRequests] = useState(demoData.nearbyRequests);
+  const acceptRequest = (id) => setNearbyRequests(requests => requests.map(request => request.id === id ? { ...request, status: 'Accepted' } : request));
+
+  return <Shell role="collector" title="Good morning, Kojo" subtitle="Tuesday, 18 June 2024 · Accra East">
+    <PreviewNote />
+    <div className="page-head" style={{ marginTop: '1.4rem' }}>
+      <div><div className="eyebrow">Collector workspace</div><h2>Your day, in order.</h2><p>Assigned stops stay here, with nearby pickup requests ready when you have capacity.</p></div>
+      <Link className="btn btn-secondary" href="/collector/route" data-testid="button-open-route"><RouteIcon size={15} /> Open route</Link>
+    </div>
+    <div className="grid-4">
+      <div className="stat-card"><div className="stat-top"><span>Stops today</span><MapPin size={16} /></div><div className="stat-value">18</div><div className="stat-foot">12 completed · 6 remaining</div></div>
+      <div className="stat-card"><div className="stat-top"><span>Route status</span><Activity size={16} /></div><div className="stat-value" style={{ fontSize: '1.35rem' }}>On route</div><div className="stat-foot">Next stop in 18 min</div></div>
+      <div className="stat-card"><div className="stat-top"><span>Today’s earnings</span><WalletCards size={16} /></div><div className="stat-value">GH₵ 380</div><div className="stat-foot">+ GH₵ 42 pending</div></div>
+      <div className="stat-card"><div className="stat-top"><span>Rating</span><Sparkles size={16} /></div><div className="stat-value">4.8</div><div className="stat-foot">From 186 completed jobs</div></div>
+    </div>
+    <div className="grid-2" style={{ marginTop: '1rem' }}>
+      <div className="panel panel-pad">
+        <div className="mini-title"><h3>Next stops</h3><Link href="/collector/jobs" data-testid="link-collector-jobs">All jobs <ChevronRight size={14} style={{ verticalAlign: 'middle' }} /></Link></div>
+        <div className="data-list">{demoData.jobs.map((job, i) => <div className="data-row" key={job.id}><div className="data-main"><strong>{i + 1}. {job.customer}</strong><span>{job.area} · {job.time}</span></div><StatusBadge status={job.status} /></div>)}</div>
+      </div>
+      <div className="panel panel-pad">
+        <div className="mini-title"><h3>Route completion</h3><span className="mono" style={{ color: 'hsl(var(--primary))', fontSize: '.78rem' }}>67%</span></div>
+        <div className="progress" style={{ height: '.75rem' }}><span style={{ width: '67%' }} /></div>
+        <div className="data-list" style={{ marginTop: '1rem' }}><div className="data-row"><span className="muted">Vehicle</span><strong>{demoData.vehicle.registration}</strong></div><div className="data-row"><span className="muted">Fuel estimate</span><strong>{demoData.route.estimatedFuelLitres}</strong></div><div className="data-row"><span className="muted">Route distance</span><strong>{demoData.route.distanceKm}</strong></div></div>
+      </div>
+    </div>
+    <div className="panel panel-pad" style={{ marginTop: '1rem' }}>
+      <div className="mini-title"><div><h3>Nearby pickup requests</h3><span className="muted" style={{ display: 'block', marginTop: '.25rem', fontSize: '.72rem' }}>Requests near your current route · preview matching</span></div><StatusBadge status="Available" /></div>
+      <div className="data-list">
+        {nearbyRequests.map((request) => <div className="data-row nearby-request" key={request.id} data-testid={`row-nearby-request-${request.id}`}>
+          <div className="data-main"><strong>{request.customer} · {request.type}</strong><span>{request.area} · {request.distance} · {request.time}</span><span>{request.bags} · estimated earnings {request.estimatedEarnings}</span></div>
+          {request.status === 'Accepted' ? <StatusBadge status="Accepted" /> : <button className="btn btn-secondary btn-sm" onClick={() => acceptRequest(request.id)} data-testid={`button-accept-request-${request.id}`}><Check size={14} /> Accept request</button>}
+        </div>)}
+      </div>
+      <div className="preview-note" style={{ marginTop: '1rem' }}><MapPin size={14} /><span>In the live service, nearby requests will be matched using the collector’s current location, vehicle capacity, and active route.</span></div>
+    </div>
+  </Shell>;
 }
 
 function CollectorJobs() {
